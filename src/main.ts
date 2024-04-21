@@ -33,6 +33,10 @@ import { parseTime, addDateRange, handleTree, selectDictLabel, selectDictLabels 
 // 国际化
 import i18n from '@/lang/index';
 
+//自定义
+import '@/assets/fonts/fonts.css'
+
+
 const app = createApp(App);
 // 全局方法挂载
 app.config.globalProperties.useDict = useDict;

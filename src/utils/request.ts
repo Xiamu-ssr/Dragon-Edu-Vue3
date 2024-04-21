@@ -1,4 +1,4 @@
-import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import axios, {AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig} from 'axios';
 import { useUserStore } from '@/store/modules/user';
 import { getToken } from '@/utils/auth';
 import { tansParams, blobValidate } from '@/utils/ruoyi';
@@ -10,6 +10,7 @@ import FileSaver from 'file-saver';
 import { getLanguage } from '@/lang';
 import { encryptBase64, encryptWithAes, generateAesKey, decryptWithAes, decryptBase64 } from '@/utils/crypto';
 import { encrypt, decrypt } from '@/utils/jsencrypt';
+import {AxiosInstance} from "axios/index";
 
 const encryptHeader = 'encrypt-key';
 let downloadLoadingInstance: LoadingInstance;
@@ -30,9 +31,19 @@ const service = axios.create({
   timeout: 50000
 });
 
+// 扩展AxiosRequestConfig以包含自定义属性
+export interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
+  successMsg?: boolean;//当后端返回200状态时，是否自动显示msgSuccess消息
+}
+
 // 请求拦截器
 service.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
+  (config: CustomAxiosRequestConfig) => {
+    // 如果config中没有successMsg属性，就设置它为false
+    if (config.successMsg === undefined) {
+      config.successMsg = false;
+    }
+
     // 对应国际化资源文件后缀
     config.headers['Content-Language'] = getLanguage();
 
@@ -148,6 +159,10 @@ service.interceptors.response.use(
       ElNotification.error({ title: msg });
       return Promise.reject('error');
     } else {
+      if('successMsg' in res.config && res.config['successMsg'] === true) {
+        ElMessage({ message: msg, type: 'success' });
+      }
+      // ElMessage({ message: msg, type: 'success' });
       return Promise.resolve(res.data);
     }
   },

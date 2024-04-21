@@ -38,6 +38,9 @@
             <el-button type="warning" plain icon="Download" @click="handleExport" v-hasPermi="['system:dict:export']">导出</el-button>
           </el-col>
           <el-col :span="1.5">
+            <el-button type="success" plain icon="View" @click="handleEnum" v-hasPermi="['system:dict:enum']">生成枚举类</el-button>
+          </el-col>
+          <el-col :span="1.5">
             <el-button type="warning" plain icon="Close" @click="handleClose">关闭</el-button>
           </el-col>
           <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
@@ -54,6 +57,7 @@
           </template>
         </el-table-column>
         <el-table-column label="字典键值" align="center" prop="dictValue" />
+        <el-table-column label="枚举常量" align="center" prop="dictEng" />
         <el-table-column label="字典排序" align="center" prop="dictSort" />
         <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
         <el-table-column label="创建时间" align="center" prop="createTime" width="180">
@@ -87,6 +91,9 @@
         <el-form-item label="数据键值" prop="dictValue">
           <el-input v-model="form.dictValue" placeholder="请输入数据键值" />
         </el-form-item>
+        <el-form-item label="枚举常量" prop="dictEng">
+          <el-input v-model="form.dictEng" placeholder="请输入枚举常量" />
+        </el-form-item>
         <el-form-item label="样式属性" prop="cssClass">
           <el-input v-model="form.cssClass" placeholder="请输入样式属性" />
         </el-form-item>
@@ -114,13 +121,30 @@
         </div>
       </template>
     </el-dialog>
+
+    <!-- 预览界面 -->
+    <el-dialog :title="dialogView.title" v-model="dialogView.visible" width="80%" top="5vh" append-to-body class="scrollbar">
+      <el-tabs v-model="previewActive">
+        <el-tab-pane
+          v-for="item in preview"
+          :label="item['name']"
+          :name="item['name']"
+          :key="item['content']"
+        >
+          <el-link :underline="false" icon="DocumentCopy" v-copyText="item['content']" v-copyText:callback="copyTextSuccess" style="float:right">
+            &nbsp;复制
+          </el-link>
+          <pre>{{ item['content'] }}</pre>
+        </el-tab-pane>
+      </el-tabs>
+    </el-dialog>
   </div>
 </template>
 
 <script setup name="Data" lang="ts">
 import useDictStore from '@/store/modules/dict'
 import { optionselect as getDictOptionselect, getType } from "@/api/system/dict/type";
-import { listData, getData, delData, addData, updateData } from "@/api/system/dict/data";
+import {listData, getData, delData, addData, updateData, generateEnum} from "@/api/system/dict/data";
 import { DictTypeVO } from '@/api/system/dict/type/types';
 import { DictDataForm, DictDataQuery, DictDataVO } from "@/api/system/dict/data/types";
 
@@ -146,6 +170,14 @@ const dialog = reactive<DialogOption>({
   title: ''
 });
 
+//预览生成代码
+const dialogView = reactive({
+  visible: false,
+  title: '字典枚举类'
+})
+const preview = ref<any>([])
+const previewActive = ref<any>()
+
 // 数据标签回显样式
 const listClassOptions = ref<Array<{ value: string, label: string }>>([
   { value: "default", label: "默认" },
@@ -160,6 +192,7 @@ const initFormData: DictDataForm = {
   dictCode: undefined,
   dictLabel: '',
   dictValue: '',
+  dictEng: '',
   cssClass: '',
   listClass: "default",
   dictSort: 0,
@@ -280,6 +313,20 @@ const handleExport = () => {
   proxy?.download("system/dict/data/export", {
     ...queryParams.value
   }, `dict_data_${new Date().getTime()}.xlsx`);
+}
+
+const handleEnum = async () => {
+  generateEnum({"dictType":queryParams.value.dictType}).then(rsp => {
+    dialogView.visible = true;
+    // console.log(rsp.data)
+    preview.value = rsp.data;
+    previewActive.value = preview.value[0]['name']
+  })
+}
+
+/** 复制代码成功 */
+const copyTextSuccess = () => {
+  proxy?.$modal.msgSuccess('复制成功');
 }
 
 onMounted(() => {

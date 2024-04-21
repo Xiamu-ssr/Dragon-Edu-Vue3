@@ -19,6 +19,7 @@ export interface TableVO extends BaseEntity {
   columns?: any;
   options?: any;
   remark?: any;
+  templateChoose?: boolean;
   treeCode?: any;
   treeParentCode?: any;
   treeName?: any;

@@ -51,3 +51,14 @@ export function delData(dictCode: string | number | Array<string | number>) {
     method: 'delete'
   });
 }
+
+
+// 生成字典对应枚举类
+export function generateEnum(data:{}): AxiosPromise<string> {
+  return request({
+    url: '/system/dict/data/enum',
+    method: 'get',
+    params: data
+  });
+}
+

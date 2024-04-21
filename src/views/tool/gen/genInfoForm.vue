@@ -82,6 +82,18 @@
         </el-form-item>
       </el-col>
 
+      <el-col :span="24">
+        <el-form-item prop="templateChoose">
+          <template #label>
+            模版选择
+            <el-tooltip content="false：默认, true: 自定义" placement="top">
+              <el-icon><question-filled /></el-icon>
+            </el-tooltip>
+          </template>
+          <el-switch v-model="infoForm.templateChoose" active-text="True" inactive-text="False" />
+        </el-form-item>
+      </el-col>
+
       <el-col :span="12">
         <el-form-item prop="genType">
           <template #label>

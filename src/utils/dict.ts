@@ -22,6 +22,7 @@ export const useDict = (...args: string[]): { [key: string]: DictDataOption[] } 
         });
       }
     });
+    // console.log(res.value)
     return res.value;
   })();
 };
