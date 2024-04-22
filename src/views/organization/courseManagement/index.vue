@@ -140,6 +140,7 @@
         </el-form-item>
         <el-form-item label="大分类" prop="mt">
           <el-select
+            style="width: 240px;"
             v-model="form.mt"
             placeholder="Select"
             @change = "selectLargeCategory"
@@ -149,11 +150,17 @@
               :key="item.id"
               :label="item.name"
               :value="item.id"
-            />
+            >
+              <span style="float: left;">{{ item.name }}</span>
+              <span style="float: right;color: #909399;font-size: 13px;">
+                {{ item.description }}
+              </span>
+            </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="小分类" prop="st">
           <el-select
+            style="width: 240px;"
             v-model="form.st"
             placeholder="Select"
           >
@@ -162,7 +169,12 @@
               :key="item.id"
               :label="item.name"
               :value="item.id"
-            />
+            >
+              <span style="float: left;">{{ item.name }}</span>
+              <span style="float: right;color: #909399FF;font-size: 13px;">
+                {{ item.description }}
+              </span>
+            </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="课程介绍" prop="description">
@@ -308,7 +320,11 @@
           <el-table-column label="教师姓名" align="center" prop="name" />
           <el-table-column label="教师职位" align="center" prop="position" />
           <el-table-column label="教师介绍" align="center" prop="introduction" />
-          <el-table-column label="教师头像" align="center" prop="photograph" />
+          <el-table-column label="教师头像" align="center" prop="photograph" >
+            <template #default="scope">
+              <el-image style="width: 100px; height: 100px" :src="fileBaseUrl+scope.row.photograph" fit="fill" />
+            </template>
+          </el-table-column>
           <el-table-column label="操作" align="center" class-name="small-padding fixed-width" v-if="!readOnly">
             <template #default="scope">
               <el-tooltip content="删除" placement="top">
@@ -478,6 +494,7 @@ const getList = async () => {
   const resCategory = await listCategory();
   categoryList.value = proxy?.handleTree(resCategory, 'id', 'parentid');
   loading.value = false;
+  console.log(categoryList)
 }
 
 /** 通过id展示category */

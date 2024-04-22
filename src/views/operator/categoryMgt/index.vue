@@ -38,7 +38,7 @@
         <el-table-column label="分类名称" align="center" prop="name" />
 <!--        <el-table-column label="父结点id" align="center" prop="parentid" />-->
         <el-table-column label="排序" align="center" prop="orderby" />
-<!--        <el-table-column label="是否叶子" align="center" prop="isLeaf" />-->
+        <el-table-column label="描述" align="center" prop="description" />
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
           <template #default="scope">
             <el-tooltip content="添加小类" placement="top" v-if="!scope.row['isLeaf']">
@@ -74,8 +74,11 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="排序字段" prop="orderby">
+        <el-form-item label="排序序号" prop="orderby">
           <el-input-number v-model="form.orderby" controls-position="right" :min="0" />
+        </el-form-item>
+        <el-form-item label="描述" prop="description">
+          <el-input type="textarea" v-model="form.description" :rows="4"/>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -115,6 +118,7 @@ const initFormData: CategoryForm = {
   name: undefined,
   parentid: undefined,
   orderby: undefined,
+  description: undefined,
   isLeaf: undefined
 }
 const queryParams = ref({
@@ -129,6 +133,7 @@ const form = ref({
   name: undefined,
   parentid: undefined,
   orderby: undefined,
+  description: undefined,
   isLeaf: false
 })
 const rules = ref({
@@ -137,6 +142,9 @@ const rules = ref({
   ],
   orderby: [
     { required: true, message: "排序字段不能为空", trigger: "blur" }
+  ],
+  description: [
+    { required: true, message: "描述字段不能为空", trigger: "blur" }
   ]
 })
 //添加小类or大类

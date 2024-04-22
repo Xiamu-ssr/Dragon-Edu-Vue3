@@ -20,6 +20,11 @@ export interface CategoryVO {
   orderby: number;
 
   /**
+   * 描述
+   */
+  description: string;
+
+  /**
    * 是否叶子
    */
   isLeaf: number;
@@ -48,6 +53,11 @@ export interface CategoryForm extends BaseEntity {
   orderby?: number;
 
   /**
+   * 描述
+   */
+  description?: string;
+
+  /**
    * 是否叶子
    */
   isLeaf?: number;
@@ -69,6 +79,11 @@ export interface CategoryQuery extends PageQuery {
    * 排序字段
    */
   orderby?: number;
+
+  /**
+   * 描述
+   */
+  description?: string;
 
   /**
    * 是否叶子
