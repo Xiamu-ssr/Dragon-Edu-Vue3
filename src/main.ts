@@ -35,7 +35,8 @@ import i18n from '@/lang/index';
 
 //自定义
 import '@/assets/fonts/fonts.css'
-
+import VueVideoPlayer from '@videojs-player/vue'
+import 'video.js/dist/video-js.css'
 
 const app = createApp(App);
 // 全局方法挂载
@@ -55,6 +56,8 @@ app.use(router);
 app.use(store);
 app.use(i18n);
 app.use(plugins);
+//自定义
+app.use(VueVideoPlayer)
 // 自定义指令
 directive(app);
 

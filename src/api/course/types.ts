@@ -61,6 +61,10 @@ export interface CourseBaseVO {
 
 }
 
+export interface CourseBaseExtraHotVo extends CourseBaseVO {
+  isHot: boolean;
+}
+
 export interface CourseBaseForm extends BaseEntity {
   /**
    * 主键

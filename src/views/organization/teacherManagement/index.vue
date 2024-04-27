@@ -190,7 +190,7 @@ const imgFile = reactive({
   "filePath": undefined,
   "md5": undefined
 })
-const fileList = ref([imgFile])
+const fileList = ref([])
 const readOnly = ref(false)//只读模式
 
 /** 查询教师管理列表 */
@@ -210,6 +210,7 @@ const cancel = () => {
 
 /** 表单重置 */
 const reset = () => {
+    fileList.value = []
     imgFile.url = undefined;
     imgFile.filePath = undefined;
     imgFile.md5 = undefined;
@@ -258,8 +259,9 @@ const handleUpdate = (row?: TeacherVO) => {
         const res = await getTeacher(_id);
         loading.value = false;
         Object.assign(form.value, res.data);
-      imgFile.url=  fileBaseUrl + form.value.photograph
-      imgFile.filePath =  form.value.photograph
+        imgFile.url=  fileBaseUrl + form.value.photograph
+        imgFile.filePath =  form.value.photograph
+        fileList.value.push(imgFile)
     });
 }
 
@@ -317,6 +319,7 @@ const handleAvatarSuccess: UploadProps['onSuccess'] = (
   imgFile.url =  fileBaseUrl + response.data["filePath"]
   imgFile.filePath =  response.data["filePath"]
   imgFile.md5 =  response.data["md5"]
+  // fileList.value.push(imgFile)
   //存入form表单
   form.value.photograph = response.data["filePath"];
 }

@@ -97,8 +97,29 @@
 
 <script setup name="Index" lang="ts">
 import { initWebSocket } from '@/utils/websocket';
+import {to as tos, to} from 'await-to-js';
+import useUserStore from "@/store/modules/user";
+
+const router = useRouter();
+
+const redirect = async () => {
+  //登陆成功获取用户信息
+  const [err2] = await tos(useUserStore().getInfo());
+  //获取失败重新登陆
+  if (err2) {
+    await useUserStore().logout();
+    ElMessage.error(err2);
+    await router.push({path: '/login'});
+  } else {
+    //如果是consumer角色则定位到/homePage
+    if (useUserStore().roles.includes("consumer")) {
+      await router.push({path: '/homePage'});
+    }
+  }
+}
 
 onMounted(() => {
+  redirect();
   let protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://'
   initWebSocket(protocol + window.location.host + import.meta.env.VITE_APP_BASE_API + "/resource/websocket");
 });

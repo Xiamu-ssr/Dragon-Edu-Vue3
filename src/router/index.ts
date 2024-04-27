@@ -95,6 +95,21 @@ export const constantRoutes: RouteOption[] = [
     component: () => import('@/views/customer/homePage/index.vue'),
     hidden: true
   },
+  {
+    path: '/courseSearch',
+    component: () => import('@/views/customer/courseSearch/index.vue'),
+    hidden: true
+  },
+  {
+    path: '/coursePlay',
+    component: () => import('@/views/customer/coursePlay/index.vue'),
+    hidden: true
+  },
+  {
+    path: '/personalCenter',
+    component: () => import('@/views/customer/personalCenter/index.vue'),
+    hidden: true
+  },
 ];
 
 // 动态路由，基于用户权限动态去加载

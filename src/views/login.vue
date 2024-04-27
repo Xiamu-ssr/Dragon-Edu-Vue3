@@ -63,7 +63,7 @@ import { getCodeImg, getTenantList } from '@/api/login';
 import { authBinding } from '@/api/system/social/auth';
 import { useUserStore } from '@/store/modules/user';
 import { LoginData, TenantVO } from '@/api/types';
-import { to } from 'await-to-js';
+import {to as tos, to} from 'await-to-js';
 import { HttpStatus } from "@/enums/RespEnum";
 
 const userStore = useUserStore();
@@ -94,7 +94,7 @@ const tenantEnabled = ref(true);
 
 
 // 注册开关
-const register = ref(false);
+const register = ref(true);
 const redirect = ref(undefined);
 const loginRef = ref<ElFormInstance>();
 // 租户列表

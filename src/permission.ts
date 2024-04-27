@@ -14,7 +14,9 @@ const whiteList = [
   '/login',
   '/register',
   '/social-callback',
-  '/homePage'
+  '/homePage',
+  '/courseSearch',
+  // '/coursePlay'
 ];
 
 router.beforeEach(async (to, from, next) => {
@@ -25,7 +27,7 @@ router.beforeEach(async (to, from, next) => {
     if (to.path === '/login') {
       next({ path: '/' });
       NProgress.done();
-    } else if (whiteList.indexOf(to.path) !== -1) {
+    }else if (whiteList.indexOf(to.path) !== -1) {
       next()
     } else {
       if (useUserStore().roles.length === 0) {

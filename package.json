@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "2.1.0",
+    "@videojs-player/vue": "^1.0.0",
     "@vueup/vue-quill": "1.2.0",
     "@vueuse/core": "9.5.0",
     "animate.css": "4.1.1",
@@ -38,6 +39,7 @@
     "screenfull": "6.0.0",
     "spark-md5": "^3.0.2",
     "vform3-builds": "3.0.8",
+    "video.js": "^8.10.0",
     "vue": "3.2.45",
     "vue-cropper": "1.0.3",
     "vue-i18n": "9.2.2",
