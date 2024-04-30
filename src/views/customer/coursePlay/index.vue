@@ -26,9 +26,12 @@
 					<el-tag v-else type="success" size="large" effect="plain"><span style="font-size: 20px">免费</span></el-tag>
 				</div>
 				<div style="float: right;margin-top: 10px">
-					<el-button type="primary" style="height: 50px; font-size: 26px;border-radius: 30px" round>
+					<el-button v-if="!ownCourseOrNot" type="primary" style="height: 50px; font-size: 26px;border-radius: 30px" @click="addCourse" round>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<el-icon><Plus /></el-icon><span>加入课程表</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					</el-button>
+                    <el-button v-else type="info" style="height: 50px; font-size: 26px;border-radius: 30px" round disabled>
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>已加入课程表</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </el-button>
 				</div>
 			</div>
 		</div>
@@ -101,7 +104,12 @@
 		</div>
     <!-- 页脚 -->
     <PageFooter/>
-	</div>
+    <!-- 支付 -->
+    <CourseBuy
+      v-model:dialog-visible="orderPayParams.dialogVisible"
+      v-model:course-base="orderPayParams.courseBase"
+    />
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -117,8 +125,13 @@ import PageFooter from "@/views/customer/homePage/page-footer.vue";
 import TeachplanCard from "@/views/customer/coursePlay/teachplan-card.vue";
 import CommentCard from "@/views/customer/coursePlay/comment-card.vue";
 import VideoPlay from "@/views/customer/coursePlay/video-play.vue";
-import {getFreeChapterVideo} from "@/api/media/Open";
+import {getChapterVideo} from "@/api/media/Open";
 import {bool} from "vue-types";
+import CourseBuy from "@/views/customer/coursePlay/course-buy.vue";
+import {addFreeCourse, isOwnCourse} from "@/api/learn/schedule";
+import {HttpStatus} from "@/enums/RespEnum";
+import {CourseBaseVO} from "@/api/course/types";
+import {receiveNotify} from "@/api/order/pay";
 
 const {proxy} = getCurrentInstance() as ComponentInternalInstance;
 const fileBaseUrl = import.meta.env.VITE_APP_MINIO_FILE_URL;
@@ -133,43 +146,84 @@ const courseAll = ref<CourseAllVO>()
 const activeName = ref('1')
 const videoSrc = ref("")
 // const videoSrc = ref("0/9/092882c28b3835e5b49d1559a79ef5ae.mp4")
+//支付
+const orderPayParams = reactive({
+  dialogVisible: false,
+  courseBase: computed(()=>{
+    const base:CourseBaseVO = {...courseAll.value}
+    return base;
+  }),
+});
+//课程表
+const ownCourseOrNot = ref(false);
 
 
 //点击小章节
-const clickSmallChapter = (mediaId: string | number | undefined | null) =>{
-  if (mediaId == undefined || (mediaId+"").trim() == ""){
-    proxy?.$modal.msgWarning("此章节貌似没有视频诶~")
-    return
-  }
-  getFreeChapterVideo(mediaId+"").then(rsp=>{
-    console.log(rsp)
-    videoSrc.value = rsp.data
+const clickSmallChapter = (teachplanId: string | number | undefined | null) =>{
+  getChapterVideo(courseAll.value?.id+"", teachplanId+"").then(rsp=>{
+    const data = rsp.data;
+    console.log(data)
+    if(data['code'] == 1){
+      videoSrc.value = rsp.data['path']
+    }else if (data['code'] == 2){
+      //need buy
+
+    }else if(data['code'] == 3){
+      proxy?.$modal.msgWarning(data['msg'])
+    }
   })
 }
 
 //取到第一个视频播放地址
-const getFirstVideo = ()=>{
-  outerLoop: for (const largeC of courseAll.value?.teachplan || []) {
-    for (const smallC of largeC.chapter) {
-      if (smallC.mediaId != null && smallC.mediaId.toString().trim() != "") {
-        clickSmallChapter(smallC.mediaId);
-        break outerLoop; // 这会中断所有循环
+const getFirstVideo = () =>{
+  if (!courseAll.value?.charge){
+    for (const largeC of courseAll.value?.teachplan || []) {
+      for (const smallC of largeC.chapter) {
+        if (smallC.mediaId != null && smallC.mediaId.toString().trim() != "") {
+          clickSmallChapter(smallC.id);
+          return;
+        }
+      }
+    }
+  }else {
+    for (const largeC of courseAll.value?.teachplan || []) {
+      for (const smallC of largeC.chapter) {
+        if (smallC.mediaId != null && smallC.mediaId.toString().trim() != "" && smallC.isPreview) {
+          clickSmallChapter(smallC.id);
+          return;
+        }
       }
     }
   }
+  proxy?.$modal.msgWarning("此课程没有可免费试看视频~");
 }
 
+//加入课程表
+const addCourse = ()=>{
+  if (!courseAll.value?.charge){
+    addFreeCourse(courseAll.value?.id).then(rsp=>{
+      if (rsp.code != HttpStatus.SUCCESS){
+        proxy?.$modal.msgSuccess("请先购买课程");
+        orderPayParams.dialogVisible = true;
+      }
+    })
+  }else {
+    proxy?.$modal.msgSuccess("请先购买课程");
+    orderPayParams.dialogVisible = true;
+  }
+}
 
 onMounted(async () => {
-	await getCategory(proxy).then(rsp=>{
-		categoryList.value = rsp
-	});
-	await getCourseAll(route.query.courseId).then(rsp=>{
-		courseAll.value = rsp.data
-    getFirstVideo();
-		console.log(courseAll.value)
-
+  getCategory(proxy).then(rsp=>{
+    categoryList.value = rsp
   });
+  await getCourseAll(route.query.courseId).then(rsp=>{
+    courseAll.value = rsp.data
+    getFirstVideo();
+  });
+  isOwnCourse(courseAll.value?.id).then(rsp=>{
+    ownCourseOrNot.value = rsp['data']
+  })
 })
 
 </script>

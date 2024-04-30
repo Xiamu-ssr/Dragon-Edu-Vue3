@@ -45,7 +45,7 @@
           </div>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item>{{ $t('navbar.personalCenter') }}</el-dropdown-item>
+              <el-dropdown-item @click="ClickTo2">{{ $t('navbar.personalCenter') }}</el-dropdown-item>
               <el-dropdown-item divided command="logout">
                 <span>{{ $t('navbar.logout') }}</span>
               </el-dropdown-item>
@@ -101,7 +101,6 @@ const ClickTo2 = () =>{
 
 <style scoped>
 :deep(.avatar-container) {
-  margin-right: 40px;
 
   .avatar-wrapper {
     margin-top: 5px;
@@ -109,18 +108,17 @@ const ClickTo2 = () =>{
 
     .user-avatar {
       cursor: pointer;
-      width: 40px;
-      height: 40px;
+      width: 50px;
+      height: 50px;
       border-radius: 10px;
-      margin-top: 10px;
     }
 
     i {
       cursor: pointer;
       position: absolute;
-      right: -20px;
-      top: 25px;
-      font-size: 12px;
+      right: -30px;
+      top: 15px;
+      font-size: 20px;
     }
   }
 }

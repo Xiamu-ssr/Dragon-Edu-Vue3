@@ -1,7 +1,7 @@
 <template>
   <video-player
     v-if="videoSrc"
-    :src="videoBaseUrl+videoSrc"
+    :src="videoSrc"
     :options="playerOptions"
     :volume="0.6"
   />

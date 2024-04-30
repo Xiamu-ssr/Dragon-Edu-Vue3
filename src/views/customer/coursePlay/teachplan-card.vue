@@ -8,7 +8,7 @@
       <el-card v-if="data.grade == 1" style="width: 100%; border-radius: 20px">
         <span>{{ node.label }}</span>
       </el-card>
-      <el-row v-else style="font-size: 20px;width: 100%" @click="clickSmallChapter(data.mediaId)">
+      <el-row v-else style="font-size: 20px;width: 100%" @click="clickSmallChapter(data)">
         <el-col :span="8">{{ node.label }}</el-col>
         <el-col :span="8">
           <el-icon v-if="data.mediaId.trim() != ''" color="#409EFF" :size="20"><VideoCamera /></el-icon>
@@ -24,6 +24,7 @@
 <script lang="ts" setup>
 import {PropType} from "vue";
 import {TeachplanVO} from "@/api/course/Open/type";
+const {proxy} = getCurrentInstance() as ComponentInternalInstance;
 
 const props = defineProps({
   teachplan: Object as PropType<TeachplanVO[]>,
@@ -38,8 +39,12 @@ const customNodeClass = (data: TeachplanVO, node: Node) => {
   }
   return null
 }
-const clickSmallChapter = (mediaId: string | number | undefined)=>{
-  emit('myEvent',mediaId);
+const clickSmallChapter = (teachplan: TeachplanVO)=>{
+  if (teachplan.mediaId == undefined || (teachplan.mediaId+"").trim() == ""){
+    proxy?.$modal.msgWarning("此章节貌似没有视频诶~")
+    return
+  }
+  emit('myEvent',teachplan.id);
 }
 
 </script>

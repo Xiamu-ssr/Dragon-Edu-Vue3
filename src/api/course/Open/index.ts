@@ -13,7 +13,7 @@ export const listCategory = (query?: CategoryQuery): AxiosPromise<CategoryVO[]> 
 
 export const getCourseAll = (id: number | string | any): AxiosPromise<CourseAllVO[]> => {
   return request({
-    url: '/course/open/courseAll/' + id,
+    url: '/course/publish/courseAll/' + id,
     method: 'get'
   });
 };

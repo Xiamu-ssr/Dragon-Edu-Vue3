@@ -1,7 +1,7 @@
 <template>
   <div class="p-2">
     <el-row :gutter="20">
-      <el-col :span="6" :xs="24">
+      <el-col :span="8" :xs="24">
         <el-card class="box-card">
           <template v-slot:header>
             <div class="clearfix">
@@ -41,7 +41,7 @@
           </div>
         </el-card>
       </el-col>
-      <el-col :span="18" :xs="24">
+      <el-col :span="16" :xs="24">
         <el-card>
           <template v-slot:header>
             <div class="clearfix">
