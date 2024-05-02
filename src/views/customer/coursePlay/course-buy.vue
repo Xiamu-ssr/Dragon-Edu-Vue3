@@ -31,6 +31,9 @@
 import {PropType} from "vue";
 import {generatePayCode, queryPayResult} from "@/api/order/pay";
 import {CourseBaseVO} from "@/api/course/types";
+import router from "@/router";
+import {sleep} from "@/utils/my";
+const {proxy} = getCurrentInstance() as ComponentInternalInstance;
 
 //对外变量
 const props = defineProps({
@@ -64,11 +67,19 @@ const getPayCode = () =>{
 
 const getPayResult = () =>{
 	queryPayResult(localValue.payNo).then(rsp=>{
-		console.log(rsp)
 		if (rsp['data'] == true){
 			//订单已支付成功
+      proxy?.$modal.confirm('您已支付成功，正在为您跳转').then(function() {
+        sleep(1000).then(rsp=>{
+          window.location.reload();
+        });
+      }).then(() => {
+      }).catch(() => {});
 		}else {
 			//支付失败
+      proxy?.$modal.confirm('您似乎仍未完成支付，请确认后再次支付。').then(function() {
+      }).then(() => {
+      }).catch(() => {});
 		}
 	})
 }

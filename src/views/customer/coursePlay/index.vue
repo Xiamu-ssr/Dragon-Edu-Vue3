@@ -109,6 +109,7 @@
       v-model:dialog-visible="orderPayParams.dialogVisible"
       v-model:course-base="orderPayParams.courseBase"
     />
+      <!--<el-button @click="queryMQTest" >testMQ</el-button>-->
   </div>
 </template>
 
@@ -128,10 +129,10 @@ import VideoPlay from "@/views/customer/coursePlay/video-play.vue";
 import {getChapterVideo} from "@/api/media/Open";
 import {bool} from "vue-types";
 import CourseBuy from "@/views/customer/coursePlay/course-buy.vue";
-import {addFreeCourse, isOwnCourse} from "@/api/learn/schedule";
+import {addFreeCourse, addLearnTime, isOwnCourse} from "@/api/learn/schedule";
 import {HttpStatus} from "@/enums/RespEnum";
 import {CourseBaseVO} from "@/api/course/types";
-import {receiveNotify} from "@/api/order/pay";
+import {queryMQTest} from "@/api/order/pay";
 
 const {proxy} = getCurrentInstance() as ComponentInternalInstance;
 const fileBaseUrl = import.meta.env.VITE_APP_MINIO_FILE_URL;
@@ -156,6 +157,10 @@ const orderPayParams = reactive({
 });
 //课程表
 const ownCourseOrNot = ref(false);
+// 用于存储进入页面的时间戳
+const startTime = ref(0);
+// 用于存储离开页面的时间戳
+const endTime = ref(0);
 
 
 //点击小章节
@@ -221,10 +226,23 @@ onMounted(async () => {
     courseAll.value = rsp.data
     getFirstVideo();
   });
-  isOwnCourse(courseAll.value?.id).then(rsp=>{
+  await isOwnCourse(courseAll.value?.id).then(rsp=>{
     ownCourseOrNot.value = rsp['data']
-  })
+  });
+  if (ownCourseOrNot.value){
+	  startTime.value = Date.now();
+  }
 })
+
+onBeforeUnmount(async () => {
+	// 记录用户离开页面的时间
+	if (ownCourseOrNot.value) {
+		endTime.value = Date.now();
+		const duration = (endTime.value - startTime.value) / (1000*60); // 分钟
+		console.log("Duration spent on page: ", duration, "mins");
+		await addLearnTime(courseAll.value?.id, duration);
+	}
+});
 
 </script>
 
