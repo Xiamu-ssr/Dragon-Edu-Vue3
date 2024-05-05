@@ -30,7 +30,7 @@
         <!-- 消息 -->
         <el-tooltip :content="$t('navbar.message')" effect="dark" placement="bottom">
           <div>
-            <el-popover placement="bottom" trigger="click" transition="el-zoom-in-top" :width="300" :persistent="false">
+            <el-popover placement="bottom" trigger="click" transition="el-zoom-in-top" :width="300" :persistent="true">
               <template #reference>
                 <el-badge :value="newNotice > 0 ? newNotice : ''" :max="99">
                   <svg-icon icon-class="message" />
@@ -50,17 +50,17 @@
           <ruo-yi-doc id="ruoyi-doc" class="right-menu-item hover-effect" />
         </el-tooltip>
 
-        <el-tooltip :content="$t('navbar.full')" effect="dark" placement="bottom">
-          <screenfull id="screenfull" class="right-menu-item hover-effect" />
-        </el-tooltip>
+        <!--<el-tooltip :content="$t('navbar.full')" effect="dark" placement="bottom">-->
+        <!--  <screenfull id="screenfull" class="right-menu-item hover-effect" />-->
+        <!--</el-tooltip>-->
 
-        <el-tooltip :content="$t('navbar.language')" effect="dark" placement="bottom">
-          <lang-select id="lang-select" class="right-menu-item hover-effect" />
-        </el-tooltip>
+        <!--<el-tooltip :content="$t('navbar.language')" effect="dark" placement="bottom">-->
+        <!--  <lang-select id="lang-select" class="right-menu-item hover-effect" />-->
+        <!--</el-tooltip>-->
 
-        <el-tooltip :content="$t('navbar.layoutSize')" effect="dark" placement="bottom">
-          <size-select id="size-select" class="right-menu-item hover-effect" />
-        </el-tooltip>
+        <!--<el-tooltip :content="$t('navbar.layoutSize')" effect="dark" placement="bottom">-->
+        <!--  <size-select id="size-select" class="right-menu-item hover-effect" />-->
+        <!--</el-tooltip>-->
       </template>
       <div class="avatar-container">
         <el-dropdown @command="handleCommand" class="right-menu-item hover-effect" trigger="click">

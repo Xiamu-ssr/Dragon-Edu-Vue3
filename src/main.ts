@@ -37,6 +37,7 @@ import i18n from '@/lang/index';
 import '@/assets/fonts/fonts.css'
 import VueVideoPlayer from '@videojs-player/vue'
 import 'video.js/dist/video-js.css'
+import * as echarts from 'echarts'
 
 const app = createApp(App);
 // 全局方法挂载
@@ -50,6 +51,7 @@ app.config.globalProperties.addDateRange = addDateRange;
 app.config.globalProperties.selectDictLabel = selectDictLabel;
 app.config.globalProperties.selectDictLabels = selectDictLabels;
 app.config.globalProperties.animate = animate;
+app.config.globalProperties.$echarts = echarts // 全局挂载echarts
 
 app.use(ElementIcons);
 app.use(router);

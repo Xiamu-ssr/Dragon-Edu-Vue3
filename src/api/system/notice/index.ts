@@ -1,10 +1,19 @@
 import request from '@/utils/request';
 import { NoticeForm, NoticeQuery, NoticeVO } from './types';
 import { AxiosPromise } from 'axios';
-// 查询公告列表
+// 查询公告列表-operator用
 export function listNotice(query: NoticeQuery): AxiosPromise<NoticeVO[]> {
   return request({
     url: '/system/notice/list',
+    method: 'get',
+    params: query
+  });
+}
+
+// 查询公告列表-organization用
+export function listNoticeOrganization(query: NoticeQuery): AxiosPromise<NoticeVO[]> {
+  return request({
+    url: '/system/notice/organization/list',
     method: 'get',
     params: query
   });

@@ -91,7 +91,7 @@ const data = reactive<PageData<DiscussForm, DiscussQuery>>({
     avatar: undefined,
     learnTime: undefined,
     content: undefined,
-    star: [0,5],
+    star: undefined,
     status: undefined,
     params: {
     }

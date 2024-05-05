@@ -1,26 +1,26 @@
 <template>
   <div class="p-2">
     <el-row justify="space-evenly">
-      <el-col :span="6"
+      <el-col :span="10"
         v-for="statistics in discussStatisticsList"
       >
         <el-card @click="toTab(statistics.courseId)" shadow="hover">
           <el-row>
             <el-col :span="8">
-              <el-image :src="fileBaseUrl+statistics.pic" fit="fill" style="width: 140px; height: 140px"/>
+              <el-image :src="fileBaseUrl+statistics.pic" fit="fill" style="width: 160px; height: 160px"/>
             </el-col>
             <el-col :span="16" style="display: flex;flex-direction: column; /* 设置子元素垂直排列 */justify-content: center;align-items: center;">
               <div>
                 <span style="font-size: 20px">{{ statistics.courseName }}</span>
               </div>
               <div style="margin-top: 10px">
-                <el-progress type="dashboard" :percentage="statistics.star*20" :color="colors" width="100" style="margin-right: 10px">
+                <el-progress type="dashboard" :percentage="statistics.star*20" :color="colors" width="120" style="margin-right: 10px">
                   <template #default="{ percentage }">
                     <span class="percentage-value">{{ parseFloat(parseFloat(percentage.toString()).toFixed(1)) }}%</span>
                     <span class="percentage-label">好评率</span>
                   </template>
                 </el-progress>
-                <el-progress type="dashboard" :percentage="100" width="100" color="#409EFF" style="margin-left: 10px">
+                <el-progress type="dashboard" :percentage="100" width="120" color="#409EFF" style="margin-left: 10px">
                   <template #default="{ percentage }">
                     <span class="percentage-value">{{ statistics.discussCount }}</span>
                     <span class="percentage-label">评论数</span>
