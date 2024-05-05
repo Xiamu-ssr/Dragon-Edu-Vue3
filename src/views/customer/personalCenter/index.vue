@@ -18,17 +18,17 @@
             default-active="1"
             text-color="black"
           >
-            <el-menu-item index="1" @click="()=>{currentComponent=Profile}">
-              <el-icon :size="20"><Setting /></el-icon>
-              <span style="font-size: 20px">个人信息</span>
-            </el-menu-item>
-            <el-menu-item index="2" @click="()=>{currentComponent=ClassSchedule}">
+            <el-menu-item index="1" @click="()=>{currentComponent=ClassSchedule}">
               <el-icon :size="20"><DataLine /></el-icon>
               <span style="font-size: 20px">课程表</span>
             </el-menu-item>
-            <el-menu-item index="3" @click="()=>{currentComponent=MyOrder}">
+            <el-menu-item index="2" @click="()=>{currentComponent=MyOrder}">
               <el-icon :size="20"><Tickets /></el-icon>
               <span style="font-size: 20px">我的订单</span>
+            </el-menu-item>
+            <el-menu-item index="3" @click="()=>{currentComponent=Profile}">
+              <el-icon :size="20"><Setting /></el-icon>
+              <span style="font-size: 20px">个人信息</span>
             </el-menu-item>
           </el-menu>
         </el-col>
@@ -49,7 +49,7 @@ import Profile from '@/views/system/user/profile/index.vue';
 import ClassSchedule from "@/views/customer/personalCenter/class-schedule.vue";
 import MyOrder from "@/views/customer/personalCenter/my-order.vue";
 
-const currentComponent = ref(Profile)
+const currentComponent = ref(ClassSchedule)
 
 </script>
 

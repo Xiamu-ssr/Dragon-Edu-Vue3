@@ -28,16 +28,49 @@
 					</el-tabs>
 				</el-col>
 				<el-col :span="8">
-					<el-card style="
-            display: flex;flex-direction: column; /* 设置子元素垂直排列 */justify-content: center;align-items: center;
-            border-radius: 20px;box-shadow: 0 2px 12px -6px black;
-          ">
-						<el-image
-							:src="homePageImg01"
-							fit="fill"
-							style="height: 310px"
-						/>
+					<el-card
+            v-if="userStore.roles.length != 0"
+            style="
+              display: flex;flex-direction: column; /* 设置子元素垂直排列 */justify-content: center;
+              border-radius: 20px;box-shadow: 0 2px 12px -6px black;
+            "
+          >
+						<el-row style="width: 100%">
+              <span style="float: left;font-size: 28px">欢迎登录，{{ userStore.nickname }}</span>
+            </el-row>
+            <el-row style="margin-top: 40px;display: flex;justify-content: center;align-items: center;">
+              <el-progress type="dashboard" :percentage="100" width="140" style="margin-right: 20px" color="#67C23A">
+                <template #default="{ percentage }">
+                  <span class="percentage-value">{{ userSimpleStatistics.courseCount }}门</span>
+                  <span class="percentage-label">拥有课程</span>
+                </template>
+              </el-progress>
+              <el-progress type="dashboard" :percentage="customPercentage.percentageShow" width="140" style="margin-left: 20px">
+                <template #default="{ percentage }">
+                  <span class="percentage-value">{{ customPercentage.percentageLast }}分钟</span>
+                  <span class="percentage-label">学习时长</span>
+                </template>
+              </el-progress>
+            </el-row>
+            <el-row style="margin-top:40px;margin-bottom: 20px;display: flex;justify-content: center;align-items: center;">
+              <el-button type="primary" style="height: 40px;width: 200px" round @click="toPersonalCenter">个人中心</el-button>
+            </el-row>
 					</el-card>
+          <el-card
+            v-else
+            @click="()=>{router.push({path: '/login'});}"
+            class="my-card"
+            style="
+              display: flex;flex-direction: column; /* 设置子元素垂直排列 */justify-content: center;align-items: center;
+              border-radius: 20px;box-shadow: 0 2px 12px -6px black;
+            "
+          >
+            <el-image
+              :src="homePageImg01"
+              fit="fill"
+              style="height: 310px"
+            />
+          </el-card>
 				</el-col>
 			</el-row>
 		</div>
@@ -85,10 +118,26 @@ import CourseCard from "@/views/customer/homePage/course-card.vue"
 import PageHeader from "@/views/customer/homePage/page-header.vue";
 import PageFooter from "@/views/customer/homePage/page-footer.vue"
 import {getCategory} from "@/utils/my";
+import useUserStore from "@/store/modules/user";
+import {simpleStatistics} from "@/api/learn/schedule";
+import {SimpleStatisticsVo} from "@/api/learn/schedule/types";
+const router = useRouter();
 
 const input = ref("");
 const {proxy} = getCurrentInstance() as ComponentInternalInstance;
 const categoryList = ref([])
+
+//个人信息
+const userStore = useUserStore();
+const userSimpleStatistics = ref<SimpleStatisticsVo>({
+  courseCount: 0,
+  learnTimeCount: 0
+})
+const customPercentage = reactive({
+  percentageLast: 0,//最终的学习时长，显示文字
+  percentageReal: 0,//真实学习时长，备份用
+  percentageShow: 0,//动画动态时长，显示动画
+})
 
 //首页顶部左侧类别选择
 const oldTab = ref("")
@@ -151,6 +200,11 @@ const getCourseHotNextPage = async () => {
 	})
 }
 
+//进入个人中心
+const toPersonalCenter = () =>{
+  proxy?.$tab.openPage("/personalCenter");
+}
+
 
 onMounted(async () => {
 	await getCategory(proxy).then(rsp => {
@@ -163,6 +217,29 @@ onMounted(async () => {
 		homePageImg02.value = module.default;
 	})
 	getCourseHotNextPage();
+  if (userStore.roles.length != 0){
+    simpleStatistics().then(rsp=>{
+      userSimpleStatistics.value = rsp['data'];
+      customPercentage.percentageReal = userSimpleStatistics.value.learnTimeCount
+
+      let interval = setInterval(() => {
+        if (customPercentage.percentageReal == null){
+          customPercentage.percentageShow = 0;
+          clearInterval(interval);
+        }else if (customPercentage.percentageShow >= 100){
+          customPercentage.percentageShow -= 100;
+          customPercentage.percentageReal -= 100;
+        } else if (customPercentage.percentageShow < customPercentage.percentageReal){
+          const step = (customPercentage.percentageShow+10) < customPercentage.percentageReal ? 10 : (customPercentage.percentageReal-customPercentage.percentageShow)
+          customPercentage.percentageShow = customPercentage.percentageShow + step
+          customPercentage.percentageLast = customPercentage.percentageLast + step;
+        }else {
+          clearInterval(interval);
+        }
+      }, 300);
+
+    })
+  }
 })
 
 </script>
@@ -211,5 +288,14 @@ onMounted(async () => {
 :deep(.my-card:hover) {
 	transform: scale(1.02); /* 鼠标悬浮时放大到1.1倍 */
 }
-
+:deep(.percentage-value) {
+  display: block;
+  margin-top: 10px;
+  font-size: 28px;
+}
+:deep(.percentage-label) {
+  display: block;
+  margin-top: 10px;
+  font-size: 12px;
+}
 </style>

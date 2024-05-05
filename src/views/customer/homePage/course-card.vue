@@ -20,14 +20,20 @@
         <span v-html="courseBase.name"></span>
       </div>
       <div style="height: 40px; ">
-        <el-rate
-          v-model="courseBase.star"
-          size="large"
-          show-score
-          text-color="#ff9900"
-          :score-template="courseBase.star.toString() + 'points'"
-          disabled
-        />
+        <!--这里不能使用星级，因为数据来源于es，用户评分不可能实时更新，容易造成疑惑-->
+        <!--<el-rate-->
+        <!--  v-model="courseBase.star"-->
+        <!--  size="large"-->
+        <!--  show-score-->
+        <!--  text-color="#ff9900"-->
+        <!--  :score-template="courseBase.star.toString() + 'points'"-->
+        <!--  disabled-->
+        <!--/>-->
+        <el-progress :text-inside="true" :stroke-width="26" :percentage="courseBase?.star * 20" :color="customColors">
+          <template #default="{ percentage }">
+            推荐指数&nbsp;{{ percentage }}%
+          </template>
+        </el-progress>
       </div>
       <div style="height: 40px;">
         <el-tag v-if="courseBase.charge" type="warning" size="large" effect="light">
@@ -55,6 +61,13 @@ const props = defineProps({
 });
 const emit = defineEmits(['update:courseBase'])
 
+const customColors = [
+  { color: '#909399', percentage: 20 },
+  { color: '#67C23A', percentage: 40 },
+  { color: '#409EFF', percentage: 60 },
+  { color: '#E6A23C', percentage: 80 },
+  { color: '#F56C6C', percentage: 100 },
+]
 
 const toCoursePlay = (courseId:string | number | undefined) =>{
 	if (courseId == undefined){

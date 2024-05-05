@@ -1,4 +1,4 @@
-import request from '@/utils/request';
+import request, {CustomAxiosRequestConfig} from '@/utils/request';
 import { AxiosPromise } from 'axios';
 import { DiscussVO, DiscussForm, DiscussQuery } from '@/api/discuss/discuss/types';
 
@@ -14,6 +14,14 @@ export const listDiscuss = (query?: DiscussQuery): AxiosPromise<DiscussVO[]> => 
         method: 'get',
         params: query
     });
+};
+
+export const listDiscussForCompany = (query?: DiscussQuery): AxiosPromise<DiscussVO[]> => {
+  return request({
+    url: '/discuss/discuss/listForCompany',
+    method: 'get',
+    params: query
+  });
 };
 
 /**
@@ -32,10 +40,11 @@ export const getDiscuss = (id: string | number): AxiosPromise<DiscussVO> => {
  * @param data
  */
 export const addDiscuss = (data: DiscussForm) => {
-    return request({
+    return request(<CustomAxiosRequestConfig>{
         url: '/discuss/discuss',
         method: 'post',
-        data: data
+        data: data,
+        successMsg:true
     });
 };
 
@@ -61,3 +70,17 @@ export const delDiscuss = (id: string | number | Array<string | number>) => {
         method: 'delete'
     });
 };
+
+
+/**
+ * 申请屏蔽
+ * @param id
+ */
+export const applyForBlock = (id: string | number) => {
+  return request(<CustomAxiosRequestConfig>{
+    url: '/discuss/discuss/applyForBlock/' + id,
+    method: 'get',
+    successMsg: true
+  });
+};
+

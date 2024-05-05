@@ -28,7 +28,28 @@ router.beforeEach(async (to, from, next) => {
       next({ path: '/' });
       NProgress.done();
     }else if (whiteList.indexOf(to.path) !== -1) {
-      next()
+      if (useUserStore().roles.length === 0) {
+        isRelogin.show = true;
+        // 判断当前用户是否已拉取完user_info信息
+        const [err] = await tos(useUserStore().getInfo());
+        if (err) {
+          await useUserStore().logout();
+          ElMessage.error(err);
+          next({ path: '/' });
+        } else {
+          isRelogin.show = false;
+          const accessRoutes = await usePermissionStore().generateRoutes();
+          // 根据roles权限生成可访问的路由表
+          accessRoutes.forEach((route) => {
+            if (!isHttp(route.path)) {
+              router.addRoute(route); // 动态添加可访问路由表
+            }
+          });
+          next({ ...to, replace: true }); // hack方法 确保addRoutes已完成
+        }
+      } else {
+        next();
+      }
     } else {
       if (useUserStore().roles.length === 0) {
         isRelogin.show = true;

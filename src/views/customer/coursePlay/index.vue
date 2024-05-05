@@ -86,7 +86,10 @@
                   <TeachplanCard :teachplan="courseAll?.teachplan" @my-event="clickSmallChapter"/>
                 </el-tab-pane>
                 <el-tab-pane label="用户评论" name="3">
-                  <CommentCard :star="courseAll?.star"/>
+                  <CommentCard
+                    v-model:course-base="orderPayParams.courseBase"
+                    v-model:own-course-or-not="ownCourseOrNot"
+                  />
                 </el-tab-pane>
               </el-tabs>
             </el-card>
@@ -117,7 +120,7 @@
 import PageHeader from "@/views/customer/homePage/page-header.vue";
 import {ArrowRight} from "@element-plus/icons-vue";
 import {getCourseAll, listCategory} from "@/api/course/Open";
-import {getCategory, showCategoryById} from "@/utils/my";
+import {getCategory, showCategoryById, sleep} from "@/utils/my";
 import {useRoute} from "vue-router";
 import {CourseAllVO} from "@/api/course/Open/type";
 import CourseCard from "@/views/customer/homePage/course-card.vue";
@@ -211,6 +214,10 @@ const addCourse = ()=>{
         proxy?.$modal.msgSuccess("请先购买课程");
         orderPayParams.dialogVisible = true;
       }
+    }).finally(()=>{
+      sleep(1000).then(rsp=>{
+        window.location.reload();
+      });
     })
   }else {
     proxy?.$modal.msgSuccess("请先购买课程");
@@ -240,7 +247,9 @@ onBeforeUnmount(async () => {
 		endTime.value = Date.now();
 		const duration = (endTime.value - startTime.value) / (1000*60); // 分钟
 		console.log("Duration spent on page: ", duration, "mins");
-		await addLearnTime(courseAll.value?.id, duration);
+    if (duration >= 1){
+      await addLearnTime(courseAll.value?.id, duration);
+    }
 	}
 });
 

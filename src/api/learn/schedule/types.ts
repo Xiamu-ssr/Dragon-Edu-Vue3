@@ -76,3 +76,17 @@ export interface ScheduleQuery extends PageQuery {
   learningTime?: number;
 
 }
+
+export interface SimpleStatisticsVo {
+
+  /**
+   * 课程数量
+   */
+  courseCount : number;
+
+  /**
+   * 总学习时长
+   */
+  learnTimeCount : any;
+}
+

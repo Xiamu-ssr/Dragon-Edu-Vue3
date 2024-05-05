@@ -36,14 +36,14 @@ const localValue = reactive({
 		set: (value) => {}
 	}),
 	percentageLast: 0,//最终的学习时长，显示文字
-	percentageReal: 0,//真实学习时长
-	percentageShow: 0,//制作动画的动态时长
+	percentageReal: 0,//真实学习时长，备份用
+	percentageShow: 0,//动画动态时长，显示动画
 	colors: [
-		{ color: '#f56c6c', percentage: 20 },
-		{ color: '#e6893c', percentage: 40 },
-		{ color: '#b5b85c', percentage: 60 },
-		{ color: '#6cfa19', percentage: 80 },
-		{ color: '#1391ec', percentage: 100 },
+		{ color: '#F56C6C', percentage: 20 },
+		{ color: '#ED8754', percentage: 40 },
+		{ color: '#E6A23C', percentage: 60 },
+		{ color: '#A6B23B', percentage: 80 },
+		{ color: '#67C23A', percentage: 100 },
 	],
 
 })
@@ -61,14 +61,14 @@ onMounted(() => {
 	localValue.percentageReal = localValue.courseInfo.learningTime
 
 	let interval = setInterval(() => {
-		if (localValue.courseInfo?.learningTime == null){
+		if (localValue.percentageReal == null){
 			localValue.percentageShow = 0;
 			clearInterval(interval);
 		}else if (localValue.percentageShow >= 100){
 			localValue.percentageShow -= 100;
-			localValue.courseInfo.learningTime -= 100;
-		} else if (localValue.percentageShow < localValue.courseInfo.learningTime){
-			const step = (localValue.percentageShow+10) < localValue.courseInfo.learningTime ? 10 : (localValue.courseInfo.learningTime-localValue.percentageShow)
+            localValue.percentageReal -= 100;
+		} else if (localValue.percentageShow < localValue.percentageReal){
+			const step = (localValue.percentageShow+10) < localValue.percentageReal ? 10 : (localValue.percentageReal-localValue.percentageShow)
 			localValue.percentageShow = localValue.percentageShow + step
 			localValue.percentageLast = localValue.percentageLast + step;
 		}else {

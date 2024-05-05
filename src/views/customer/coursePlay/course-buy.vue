@@ -77,7 +77,7 @@ const getPayResult = () =>{
       }).catch(() => {});
 		}else {
 			//支付失败
-      proxy?.$modal.confirm('您似乎仍未完成支付，请确认后再次支付。').then(function() {
+      proxy?.$modal.confirm('您似乎仍未完成支付，请确认后再次支付。如果您确定已支付但课程仍未加入课程表，请你稍等几分钟，或者前往我的订单在4小时内发起二次确认。').then(function() {
       }).then(() => {
       }).catch(() => {});
 		}

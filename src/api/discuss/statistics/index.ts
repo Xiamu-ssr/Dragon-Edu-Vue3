@@ -28,6 +28,27 @@ export const getStatistics = (id: string | number): AxiosPromise<StatisticsVO> =
 };
 
 /**
+ * 查询评论统计，机构用详细
+ * @param courseId
+ */
+export const getStatisticsByCourseId = (courseId: string | number): AxiosPromise<StatisticsVO> => {
+  return request({
+    url: '/discuss/statistics/course/' + courseId,
+    method: 'get'
+  });
+};
+
+/**
+ * 查询某机构所有评论统计，机构用详细
+ */
+export const getStatisticsByCompanyId = (): AxiosPromise<StatisticsVO[]> => {
+  return request({
+    url: '/discuss/statistics/listAll',
+    method: 'get'
+  });
+};
+
+/**
  * 新增评论统计，机构用
  * @param data
  */

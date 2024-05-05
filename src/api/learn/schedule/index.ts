@@ -1,7 +1,7 @@
 import request, {CustomAxiosRequestConfig} from '@/utils/request';
 import { AxiosPromise } from 'axios';
 import {PayQRCodeVo} from "@/api/order/pay/types";
-import { ScheduleVO, ScheduleForm, ScheduleQuery } from '@/api/learn/schedule/types';
+import {ScheduleVO, ScheduleForm, ScheduleQuery, SimpleStatisticsVo} from '@/api/learn/schedule/types';
 
 export const addFreeCourse = (courseId : number | string): AxiosPromise<any> => {
   return request(<CustomAxiosRequestConfig>{
@@ -15,6 +15,13 @@ export const isOwnCourse = (courseId : number | string): AxiosPromise<any> => {
   return request({
     url: '/learn/schedule/isOwnCourse/' + courseId,
     method: 'get',
+  });
+};
+
+export const simpleStatistics = (): AxiosPromise<SimpleStatisticsVo> => {
+  return request({
+    url: '/learn/schedule/simpleStatistics',
+    method: 'get'
   });
 };
 

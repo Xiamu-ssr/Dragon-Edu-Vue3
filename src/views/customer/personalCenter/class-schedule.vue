@@ -71,7 +71,6 @@ const getList = async () => {
   scheduleList.value = res.rows;
   total.value = res.total;
   loading.value = false;
-  console.log(scheduleList.value)
 }
 
 /** 搜索按钮操作 */

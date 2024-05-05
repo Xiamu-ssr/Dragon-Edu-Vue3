@@ -40,7 +40,6 @@ const emit = defineEmits(['update:teacher'])
 const errorT = () =>{
   loadError.value = true;
 }
-console.log("test")
 </script>
 
 <style scoped lang="scss">
