@@ -56,7 +56,7 @@
             <el-col :span="17" :offset="1">
               <div>评论数&nbsp;Discuss</div>
               <div><span>{{ statisticsData.discussNum }}</span></div>
-              <div><span style="color: #67C23A">{{ statisticsData.discussGood }}&nbsp;</span>&nbsp;高分评论</div>
+              <div><span style="color: #67C23A">{{ statisticsData.discussAvg }}&nbsp;</span>&nbsp;平均评论数</div>
             </el-col>
             <el-col :span="6">
               <el-avatar shape="square" :size="40" style="background-color: #821cc644;">
@@ -124,11 +124,11 @@
   </div>
 </template>
 <script setup lang="ts">
-import {DiscussStatusEnum} from "@/enums/DiscussStatusEnum";
-import {MediaStatusEnum} from "@/enums/MediaStatusEnum";
 import notice from '@/layout/components/notice/index.vue';
+import {BestCourseVo, CurrentOrdersVo, SaleDataEchartsVo, TotalStatisticsVo} from "@/api/order/totalStatistics/types";
+import {getTotalData} from "@/api/order/totalStatistics";
 
-const statisticsData = ref({
+const statisticsData = ref<TotalStatisticsVo>({
   orderNum : 152, // 订单总数量
   orderThisWeek : 24, //本周新订单数
   revenue : 2100, // 总盈利额
@@ -136,8 +136,8 @@ const statisticsData = ref({
   courseNum : 24, //课程数量
   teachplanNum : 245, //章节数量
   discussNum : 245, // 评论总数
-  discussGood : 45, //高于等于4.0分的高分推荐
-  currentOrders: [ // 最新的10个订单,
+  discussAvg : 45, //高于等于4.0分的高分推荐
+  currentOrders: <CurrentOrdersVo[]>[ // 最新的10个订单,
     {pic:"", courseName:"Java开发", price:52.0},
     {pic:"", courseName:"Java开发", price:52.0},
     {pic:"", courseName:"Java开发", price:52.0},
@@ -154,19 +154,19 @@ const statisticsData = ref({
     {pic:"", courseName:"Java开发", price:52.0},
     {pic:"", courseName:"Java开发", price:52.0}
   ],
-  saleData: {//7周销售统计-不算本周
+  saleData: <SaleDataEchartsVo> {//7周销售统计-不算本周
     xAxis: ['03.01-03.07', '03.01-03.07', '03.01-03.07', '03.01-03.07', '03.01-03.07', '03.01-03.07', '03.01-03.07'],
     saleNum: [20, 92, 91, 94, 1290, 130, 120],
     saleMoney: [820, 932, 901, 934, 1290, 1330, 1320],
-    saleSingle: [20, 192,41, 93, 129, 130, 60],
+    saleAvg: [20, 192,41, 93, 129, 130, 60],
     saleGrowRate: [10, 1, -2, 14, -10, 0, 10],
   },
-  bestCourse: [
-    {courseName: "Java开发", hot: 90},
-    {courseName: "Java开发", hot: 90},
-    {courseName: "Java开发", hot: 90},
-    {courseName: "Java开发", hot: 90},
-    {courseName: "Java开发", hot: 90},
+  bestCourse: <BestCourseVo[]> [
+    {courseName: "Java开发", star: 90},
+    {courseName: "Java开发", star: 90},
+    {courseName: "Java开发", star: 90},
+    {courseName: "Java开发", star: 90},
+    {courseName: "Java开发", star: 90},
   ], //本周最收欢迎的5门课程
 })
 
@@ -222,7 +222,7 @@ const loadMyEchart=()=>{
     series: [
       {
         name: "销售量",
-        data: [820, 932, 901, 934, 1290, 1330, 1320],
+        data: statisticsData.value.saleData.saleNum,
         type: 'line',
         smooth: true,
         lineStyle: {
@@ -231,7 +231,7 @@ const loadMyEchart=()=>{
       },
       {
         name: "销售额",
-        data: [20, 92, 91, 94, 1290, 130, 120],
+        data: statisticsData.value.saleData.saleMoney,
         type: 'line',
         smooth: true,
         lineStyle: {
@@ -263,7 +263,10 @@ const loadMyEchart=()=>{
   userEc.setOption(option);//将图标挂载到标签组件
 }
 
-onMounted(()=>{
+onMounted(async () => {
+  await getTotalData().then(rsp=>{
+    statisticsData.value = rsp.data
+  })
   loadMyEchart();
 })
 
