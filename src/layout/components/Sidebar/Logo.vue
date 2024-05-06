@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import variables from '@/assets/styles/variables.module.scss'
-import logo from '@/assets/logo/logo.png'
+import logo from '@/assets/logo/wind_dragon.png'
 import useSettingsStore from '@/store/modules/settings'
 import { ComponentInternalInstance } from "vue";
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
@@ -35,7 +35,7 @@ defineProps({
     }
 })
 
-const title = ref('RuoYi-Vue-Plus');
+const title = ref('龙智教育');
 const settingsStore = useSettingsStore();
 const sideTheme = computed(() => settingsStore.sideTheme);
 </script>

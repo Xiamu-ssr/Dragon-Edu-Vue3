@@ -102,7 +102,7 @@
             <el-table-column prop="courseName" label="课程名称" />
             <el-table-column prop="hot" label="热度">
               <template #default="scope">
-                <el-progress :stroke-width="12" :percentage="scope.row.hot" color="#F56C6C">
+                <el-progress :stroke-width="12" :percentage="scope.row.star*20" color="#F56C6C">
                   <template #default="{ percentage }">
                     <span style="color: #F56C6C;">&nbsp;{{ percentage }}%</span>
                   </template>
@@ -128,7 +128,7 @@ import notice from '@/layout/components/notice/index.vue';
 import {BestCourseVo, CurrentOrdersVo, SaleDataEchartsVo, TotalStatisticsVo} from "@/api/order/totalStatistics/types";
 import {getTotalData} from "@/api/order/totalStatistics";
 
-const statisticsData = ref<TotalStatisticsVo>({
+const statisticsDataInit:TotalStatisticsVo = {
   orderNum : 152, // 订单总数量
   orderThisWeek : 24, //本周新订单数
   revenue : 2100, // 总盈利额
@@ -168,7 +168,8 @@ const statisticsData = ref<TotalStatisticsVo>({
     {courseName: "Java开发", star: 90},
     {courseName: "Java开发", star: 90},
   ], //本周最收欢迎的5门课程
-})
+}
+const statisticsData = ref<TotalStatisticsVo>({...statisticsDataInit})
 
 const { proxy } = getCurrentInstance()//获取Vue3全局配置
 const myEchart = ref();//用来获取对应标签组件
@@ -240,7 +241,7 @@ const loadMyEchart=()=>{
       },
       {
         name: "每单收入",
-        data: [22, 90, 10, 40, 190, 130, 20],
+        data: statisticsData.value.saleData.saleAvg,
         type: 'line',
         smooth: true,
         lineStyle: {
@@ -250,7 +251,7 @@ const loadMyEchart=()=>{
       {
         name: '增长率',
         yAxisIndex: 1, // 指定使用第二个 Y 轴（右侧）
-        data: [10, 1, -2, 14, -10, 0, 10],
+        data: statisticsData.value.saleData.saleGrowRate,
         type: 'line',
         smooth: false,
         lineStyle: {
@@ -265,7 +266,17 @@ const loadMyEchart=()=>{
 
 onMounted(async () => {
   await getTotalData().then(rsp=>{
-    statisticsData.value = rsp.data
+    statisticsData.value = rsp.data;
+    statisticsData.value.saleData.saleAvg = []
+    statisticsData.value.saleData.saleGrowRate = []
+    let saleMoneyLast = 0;
+    for (let i = 0; i < statisticsData.value.saleData.saleMoney.length; i++) {
+      const saleMoney = statisticsData.value.saleData.saleMoney[i];
+      const saleNum = statisticsData.value.saleData.saleNum[i];
+      statisticsData.value.saleData.saleAvg.push(parseFloat((saleMoney / saleNum).toFixed(2)));
+      statisticsData.value.saleData.saleGrowRate.push(parseFloat(((saleMoney - saleMoneyLast) / saleMoneyLast * 100).toFixed(2)));
+      saleMoneyLast = saleMoney;
+    }
   })
   loadMyEchart();
 })
