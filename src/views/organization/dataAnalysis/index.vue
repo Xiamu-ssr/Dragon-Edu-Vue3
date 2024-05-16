@@ -73,7 +73,11 @@
         <el-card>
           <div style="margin-bottom: 10px"><span style="font-size: 20px">最近订单&nbsp;Recent Sales</span></div>
           <el-table :data="statisticsData.currentOrders" height="350" style="width: 100%">
-            <el-table-column prop="pic" label="图片"/>
+            <el-table-column prop="pic" label="图片">
+				<template #default="scope">
+					<el-image :src="fileBaseUrl+scope.row.pic" fit="fill" style="width: 50px; height: 50px"/>
+				</template>
+			</el-table-column>
             <el-table-column prop="courseName" label="课程名称" sortable />
             <el-table-column prop="price" label="价格" sortable />
             <el-table-column label="操作">
@@ -127,6 +131,8 @@
 import notice from '@/layout/components/notice/index.vue';
 import {BestCourseVo, CurrentOrdersVo, SaleDataEchartsVo, TotalStatisticsVo} from "@/api/order/totalStatistics/types";
 import {getTotalData} from "@/api/order/totalStatistics";
+
+const fileBaseUrl = import.meta.env.VITE_APP_MINIO_FILE_URL;
 
 const statisticsDataInit:TotalStatisticsVo = {
   orderNum : 152, // 订单总数量

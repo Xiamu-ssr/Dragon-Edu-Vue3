@@ -253,7 +253,7 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 :deep(.wave-blue-card) {
-	background-image: url("src/assets/svg/wave_blue_static.svg");
+	background-image: url("@/assets/svg/wave_blue_static.svg");
 	background-repeat: no-repeat;
 	background-size: cover; /* 或使用 100% 100% 来确保完全覆盖 */
 	background-position: center; /* 根据需要调整 */

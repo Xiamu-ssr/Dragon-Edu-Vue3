@@ -84,7 +84,7 @@ const toCoursePlay = (courseId:string | number | undefined) =>{
 
 /* 卡片图片背景 */
 :deep(.wave-orange-card){
-  background-image: url("src/assets/svg/wave_orange.svg");
+  background-image: url("@/assets/svg/wave_orange.svg");
   background-repeat: no-repeat;
   background-size: cover; /* 或使用 100% 100% 来确保完全覆盖 */
   background-position: center; /* 根据需要调整 */

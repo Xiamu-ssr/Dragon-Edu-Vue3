@@ -1,10 +1,16 @@
 {
   "compilerOptions": {
+    //即使类型错误，也会继续编译
+    "strict": false,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "noEmitOnError": false,
+
     "target": "es2022",
     "useDefineForClassFields": true,
     "module": "esnext",
     "moduleResolution": "node",
-    "strict": true,
+//    "strict": true,
 //    "jsx": "preserve",
 //    "jsx": "react",
     "jsx": "preserve",

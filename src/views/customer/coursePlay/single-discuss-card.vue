@@ -2,7 +2,7 @@
   <el-row style="width: 100%;">
     <el-col :span="2">
       <el-avatar
-        :src="discuss?.avatar"
+        :src="minioBaseUrl + extractSubString(discuss?.avatar)"
         fit="cover"
         :size="50"
       />
@@ -37,6 +37,8 @@ import {StatisticsVO} from "@/api/discuss/statistics/types";
 import {DiscussVO} from "@/api/discuss/discuss/types";
 import {ChatDotRound, ChatLineRound, ChatRound} from "@element-plus/icons-vue";
 
+const minioBaseUrl = import.meta.env.VITE_APP_MINIO_BASE_URL;
+
 const props = defineProps({
   discuss: Object as PropType<DiscussVO>
 })
@@ -48,6 +50,23 @@ const localValue = reactive({
     set: (value) => emit('update:discuss', value)
   })
 })
+
+function extractSubString(url: string): string {
+	// 如果不是以 http 开头，返回默认值
+	if (!url.startsWith('http')) {
+		return 'ruoyi/2024/05/16/ad860ebd34794fc2bed154fc4d0eac77.png';
+	}
+
+	// 使用正则表达式匹配端口号后面的部分
+	const regex = /:\d+\/(.*)/;
+	const match = url.match(regex);
+
+	if (match && match[1]) {
+		return match[1];
+	} else {
+		return null; // 如果没有匹配到，返回 null
+	}
+}
 </script>
 <style scoped lang="scss">
 
