@@ -9,3 +9,11 @@ export const getESCourseData = (page?: any): AxiosPromise<CourseBaseVO[]> => {
     data: page
   });
 };
+
+export const getESCourseDataHomePage = (page?: any): AxiosPromise<CourseBaseVO[]> => {
+  return request({
+    url: '/es/open/homePageList',
+    method: 'post',
+    data: page
+  });
+};

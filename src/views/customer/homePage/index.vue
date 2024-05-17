@@ -116,7 +116,7 @@
 </template>
 
 <script lang="ts" name="HomePage" setup>
-import {getESCourseData} from "@/api/es/Open"
+import {getESCourseData, getESCourseDataHomePage} from "@/api/es/Open"
 import {TabsPaneContext} from "element-plus";
 import {CourseQueryBo} from "@/api/course/Hot/types";
 import {CourseBaseExtraHotVo} from "@/api/course/types";
@@ -198,13 +198,23 @@ const getCourseHotNextPage = async () => {
 		loadingHot.value = false;
 		return;
 	}
-	getESCourseData(hotPage).then(rsp => {
-		console.log("getESCourseData", rsp);
-		hotList.value.push(...rsp.list);
-		hotPage.total = rsp.total;
-	}).finally(() => {
-		loadingHot.value = false;
-	})
+  if (hotPage.pageNum == 1){
+    getESCourseDataHomePage(hotPage).then(rsp => {
+      console.log("getESCourseData", rsp);
+      hotList.value.push(...rsp.list);
+      hotPage.total = rsp.total;
+    }).finally(() => {
+      loadingHot.value = false;
+    })
+  }else {
+    getESCourseData(hotPage).then(rsp => {
+      console.log("getESCourseData", rsp);
+      hotList.value.push(...rsp.list);
+      hotPage.total = rsp.total;
+    }).finally(() => {
+      loadingHot.value = false;
+    })
+  }
 }
 
 //进入个人中心
