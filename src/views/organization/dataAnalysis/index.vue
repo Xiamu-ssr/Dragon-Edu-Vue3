@@ -220,10 +220,10 @@ const loadMyEchart=()=>{
     legend: {
       data: ['销售量', '销售额', '每单收入', '增长率'],
       selected: {
-        '销售量': true,
+        '销售量': false,
         '销售额': true,
         '每单收入': false,
-        '增长率': false
+        '增长率': true
       }
     },
     series: [
@@ -279,10 +279,23 @@ onMounted(async () => {
     for (let i = 0; i < statisticsData.value.saleData.saleMoney.length; i++) {
       const saleMoney = statisticsData.value.saleData.saleMoney[i];
       const saleNum = statisticsData.value.saleData.saleNum[i];
-      statisticsData.value.saleData.saleAvg.push(parseFloat((saleMoney / saleNum).toFixed(2)));
-      statisticsData.value.saleData.saleGrowRate.push(parseFloat(((saleMoney - saleMoneyLast) / saleMoneyLast * 100).toFixed(2)));
+      if (saleNum != 0){
+        statisticsData.value.saleData.saleAvg.push(parseFloat((saleMoney / saleNum).toFixed(2)));
+      }else {
+        statisticsData.value.saleData.saleAvg.push(0.00);
+      }
+      if (saleMoney == 0 && saleMoneyLast == 0){
+        statisticsData.value.saleData.saleGrowRate.push(0.00);
+      }else if (saleMoney == 0 && saleMoneyLast != 0){
+        statisticsData.value.saleData.saleGrowRate.push(-100.00);
+      } else if (saleMoney != 0 && saleMoneyLast == 0){
+        statisticsData.value.saleData.saleGrowRate.push(100.00);
+      }else {
+        statisticsData.value.saleData.saleGrowRate.push(parseFloat(((saleMoney - saleMoneyLast) / saleMoneyLast * 100).toFixed(2)));
+      }
       saleMoneyLast = saleMoney;
     }
+    console.log(statisticsData.value)
   })
   loadMyEchart();
 })
