@@ -107,9 +107,7 @@
             <el-table-column prop="hot" label="热度">
               <template #default="scope">
                 <el-progress :stroke-width="12" :percentage="scope.row.star*20" color="#F56C6C">
-                  <template #default="{ percentage }">
-                    <span style="color: #F56C6C;">&nbsp;{{ percentage }}%</span>
-                  </template>
+                    <span style="color: #F56C6C;">&nbsp;{{ (scope.row.star*20).toFixed(2) }}%</span>
                 </el-progress>
               </template>
             </el-table-column>
