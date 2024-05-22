@@ -175,7 +175,7 @@ const clickSmallChapter = (teachplanId: string | number | undefined | null) =>{
       videoSrc.value = rsp.data['path']
     }else if (data['code'] == 2){
       //need buy
-
+      proxy?.$modal.msgWarning(data['msg'])
     }else if(data['code'] == 3){
       proxy?.$modal.msgWarning(data['msg'])
     }

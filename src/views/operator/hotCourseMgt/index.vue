@@ -489,7 +489,7 @@ onMounted(async () => {
 }
 
 :deep(.hot-card) {
-	background-image: url("src/assets/svg/wave_red.svg");
+	background-image: url("@/assets/svg/wave_red.svg");
 	background-repeat: no-repeat;
 	background-size: cover; /* 或使用 100% 100% 来确保完全覆盖 */
 	background-position: center; /* 根据需要调整 */
@@ -497,7 +497,7 @@ onMounted(async () => {
 }
 
 :deep(.not-hot-card) {
-	background-image: url("src/assets/svg/wave_blue.svg");
+	background-image: url("@/assets/svg/wave_blue.svg");
 	background-repeat: no-repeat;
 	background-size: cover; /* 或使用 100% 100% 来确保完全覆盖 */
 	background-position: center; /* 根据需要调整 */
