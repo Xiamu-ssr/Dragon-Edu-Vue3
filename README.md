@@ -34,7 +34,7 @@ npm run build:prod
 ```
 
 ## 参考教程
-b站-木子dn
+[b站-木子dn](https://www.bilibili.com/video/BV1GM4m1k7uN)
 
 ## 演示图例
 见后端，https://github.com/Xiamu-ssr/Dragon-Edu
