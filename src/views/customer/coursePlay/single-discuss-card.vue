@@ -54,7 +54,7 @@ const localValue = reactive({
 function extractSubString(url: string): string {
 	// 如果不是以 http 开头，返回默认值
 	if (!url.startsWith('http')) {
-		return 'ruoyi/2024/05/22/03fbc1c1e5b24d60960db397ed2757ad.png';
+		return 'ruoyi/2024/05/16/ad860ebd34794fc2bed154fc4d0eac77.png';
 	}
 
 	// 使用正则表达式匹配端口号后面的部分

@@ -201,7 +201,7 @@ const hotColumns: Column<any>[] = [
 				modelValue={cellData}
 				show-score
 				text-color="#ff9900"
-				score-template={`${cellData} points`}
+				score-template={`${cellData.toFixed(2)} points`}
 				disabled
 			/>,
 		headerCellRenderer: ({column}) =>
@@ -331,7 +331,7 @@ const notHotColumns: Column<any>[] = [
 				modelValue={cellData}
 				show-score
 				text-color="#ff9900"
-				score-template={`${cellData} points`}
+				score-template={`${cellData.toFixed(2)} points`}
 				disabled
 			/>,
 		headerCellRenderer: ({column}) =>
