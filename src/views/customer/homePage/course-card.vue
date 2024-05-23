@@ -31,7 +31,7 @@
         <!--/>-->
         <el-progress :text-inside="true" :stroke-width="26" :percentage="courseBase?.star * 20" :color="customColors">
           <template #default="{ percentage }">
-            推荐指数&nbsp;{{ percentage }}%
+            推荐指数&nbsp;{{ (percentage).toFixed(2) }}%
           </template>
         </el-progress>
       </div>
